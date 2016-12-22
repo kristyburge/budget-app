@@ -1,9 +1,40 @@
-
 // BUDGET CONTROLLLER
 var budgetController = (function() {
     
-   // some code
+    // each new item needs description and a value + distinguish by #id income vs. expense
     
+    
+    // create a function constructor for income and expense types
+    var Expense = function(id, description, value){
+      
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        
+    };
+    
+    
+    var Income = function(id, description, value){
+        
+        this.id = id;
+        this.description = description;
+        this.value = value;
+        
+    };
+    
+
+    var data = {
+        
+        allItems: {
+            expenses: [],
+            income: []
+        },        
+        totals: {
+            expenses: 0,
+            income: 0
+        }
+    }
+
 })();
 
 
