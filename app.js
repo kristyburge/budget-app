@@ -26,13 +26,50 @@ var budgetController = (function() {
     var data = {
         
         allItems: {
-            expenses: [],
-            income: []
+            exp: [],
+            inc: []
         },        
         totals: {
-            expenses: 0,
-            income: 0
+            exp: 0,
+            inc: 0
         }
+    };
+    
+    // create public method to allow other modules to add new items to the data structure
+    return {
+        addItem: function(type, desc, val) {
+            var newItem, ID;
+            
+            // assign a unique id to each new expense or income item
+            // ID = last ID + 1
+            
+            // create new ID
+            if (data.allItems[type].length > 0){
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+            } else {
+                ID = 0;
+            }
+            // console.log('The new ID for this item is: ' + ID);
+            
+            // create new item based on 'inc' or 'exp' type
+            if (type === "exp") {
+                newItem = new Expense(ID, desc, val);
+            } else if (type === "inc") {
+                newItem = new Income(ID, desc, val);
+            }
+            
+            // add new exp or inc to the end of the allItems.exp or allItems.inc array
+            data.allItems[type].push(newItem);
+            
+            // return the new item
+            return newItem;
+            
+        }, 
+        
+        testing: function() {
+            console.log(data);
+        }
+        
     }
 
 })();
@@ -96,13 +133,16 @@ var controller = (function(budgetCntrl, UICntrl) {
       
     // private function that gets called when we want to add a new item
     var controlAddItem = function(){
+        // declare variables
+        var input, newItem;
+        
         
         // 1. Get the field input data when enter key or button is clicked
-        var input = UICntrl.getInput();
+        input = UICntrl.getInput();
         console.log(input);
         
         // 2. Add the item to the budget controller
-        
+        newItem = budgetCntrl.addItem(input.type, input.description, input.value);
         
         // 3. Add the new item to the UI
         
