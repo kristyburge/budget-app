@@ -64,11 +64,11 @@ var budgetController = (function () {
             // return the new item
             return newItem;
 
-        },
-
-        testing: function () {
-            console.log(data);
         }
+
+//        testing: function () {
+//            console.log(data);
+//        }
 
     }
 
@@ -85,7 +85,9 @@ var UIController = (function () {
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
-        inputButton: '.add__btn'
+        inputButton: '.add__btn',
+        incomeContainer: '.income__list',
+        expenseContainer: '.expenses__list'
     }
 
     // return an object that contains a method to get input values
@@ -101,7 +103,54 @@ var UIController = (function () {
         },
 
         addListItem: function (obj, type) {
-
+            
+            // declare variables
+            var html, newHtml, element;
+            
+            // create HTML string with placeholder text
+            if (type === 'inc') {
+                
+                element = DOMstrings.incomeContainer;
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                
+            } else if (type === 'exp') {
+                
+                element = DOMstrings.expenseContainer;
+                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                
+            }
+            
+            // replace placeholder text with some actual data
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%value%', obj.value);
+            
+            // insert the HTML into the DOM
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);  
+            
+            
+        },
+        
+        clearFields: function() {
+            
+            var fields, fieldsArray;
+            
+            fields = document.querySelectorAll(DOMstrings.inputDescription + ',' + DOMstrings.inputValue);
+            
+            // convert list to array. 
+            // since querySelectorAll returns a string, use Array.prototype to call .slice and then bind the this variable to fields using .call
+            fieldsArray = Array.prototype.slice.call(fields);
+            
+            // use .foreach method that works like the for loop
+            // the anonymous function in the .foreach method can receive up to 3 arguments
+            fieldsArray.forEach(function(currentValue, index, array){
+                // set the value of the currentValue to empty
+                currentValue.value = "";
+            });
+            
+            // set the focus back to the description element when cleared
+            fieldsArray[0].focus();
+            
         },
 
         // pass DOMstrings object to the global app controller
@@ -143,18 +192,21 @@ var controller = (function (budgetCntrl, UICntrl) {
 
         // 1. Get the field input data when enter key or button is clicked
         input = UICntrl.getInput();
-        console.log(input);
+        // console.log(input);
 
         // 2. Add the item to the budget controller
         newItem = budgetCntrl.addItem(input.type, input.description, input.value);
 
         // 3. Add the new item to the UI
+        UICntrl.addListItem(newItem, input.type);
+        
+        // 4. Clear the fields
+        UICntrl.clearFields();
+
+        // 5. Calculate the budget
 
 
-        // 4. Calculate the budget
-
-
-        // 5. Display the budget on the UI
+        // 6. Display the budget on the UI
 
     };
 
