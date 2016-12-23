@@ -64,11 +64,11 @@ var budgetController = (function () {
             // return the new item
             return newItem;
 
-        }
+        },
 
-//        testing: function () {
-//            console.log(data);
-//        }
+        testing: function () {
+            console.log(data);
+        }
 
     }
 
@@ -97,7 +97,7 @@ var UIController = (function () {
             return { // return an object with three properties instead of having 3 separate variables
                 type: document.querySelector(DOMstrings.inputType).value, // will be either income or expense
                 description: document.querySelector(DOMstrings.inputDescription).value,
-                value: document.querySelector(DOMstrings.inputValue).value
+                value: parseFloat(document.querySelector(DOMstrings.inputValue).value) // the reads a string, so need to convert to a number
             };
 
         },
@@ -182,6 +182,19 @@ var controller = (function (budgetCntrl, UICntrl) {
         });
     };
 
+    
+     var updateBudget = function(){
+        
+        // 1. Calculate the budget
+        
+        
+        // 2. Return the budget
+        
+        
+        // 3. Display the budget on the UI
+        
+        
+    };
 
 
     // private function that gets called when we want to add a new item
@@ -193,23 +206,29 @@ var controller = (function (budgetCntrl, UICntrl) {
         // 1. Get the field input data when enter key or button is clicked
         input = UICntrl.getInput();
         // console.log(input);
-
-        // 2. Add the item to the budget controller
-        newItem = budgetCntrl.addItem(input.type, input.description, input.value);
-
-        // 3. Add the new item to the UI
-        UICntrl.addListItem(newItem, input.type);
         
-        // 4. Clear the fields
-        UICntrl.clearFields();
+        
+        // make sure there is actually data
+        // use NaN to make sure that this isn't empty:: isNaN: if true, it has a number, if false, it doesn't have a number
+        // prevent negative numbers and zero by > 0 
+        if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+            
+            // 2. Add the item to the budget controller
+            newItem = budgetCntrl.addItem(input.type, input.description, input.value);
 
-        // 5. Calculate the budget
+            // 3. Add the new item to the UI
+            UICntrl.addListItem(newItem, input.type);
+
+            // 4. Clear the fields
+            UICntrl.clearFields();
+
+            // 5. Calculate and update the budget
+            updateBudget();
 
 
-        // 6. Display the budget on the UI
+        }
 
     };
-
 
     // create a public initialization function
     // return in an object to make public
