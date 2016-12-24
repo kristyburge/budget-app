@@ -10,9 +10,31 @@ var budgetController = (function () {
         this.id = id;
         this.description = description;
         this.value = value;
+        this.percentage = -1;
 
     };
-
+    
+    // add the method to the prototype of expense so each object will inherit the method
+    Expense.prototype.calcPercentage = function(totalIncome) {
+        // only calculate if Income is greater than zero
+        if (totalIncome > 0) {
+        
+            this.percentage = Math.round((this.value / totalIncome) * 100);
+            
+        } else {
+            
+            this.percentage = -1;
+            
+        }
+        
+    };
+    
+    Expense.prototype.getPercentage = function(){
+        // use this method to return the calculated percentage
+        return this.percentage;
+        
+    };
+    
 
     var Income = function (id, description, value) {
 
@@ -135,6 +157,41 @@ var budgetController = (function () {
                 data.percentage = -1;
                 
             }
+            
+        },
+        
+        calculatePercentages: function() {
+            
+            // calculate % for each item stored in the expenses array
+            /* 
+            a = $20 :: 20/100 = 20%
+            b = $10 :: 10/100 = 10%
+            c = $40 :: 40/100 = 40%
+            income = $100
+            */
+            
+            data.allItems.exp.forEach(function(currentVar){
+                
+                currentVar.calcPercentage(data.totals.inc);
+                
+            });
+            
+            
+            
+        },
+        
+        getPercentages: function() {
+          
+            // must loop over all the expenses to call on each of the expense objects
+            // use .map to return something new
+            
+            var allPercentages = data.allItems.exp.map(function(currentEl){
+                // loops through each element and returns the getPercentage method
+                return currentEl.getPercentage();
+            });
+            
+            // return the variable
+            return allPercentages;
             
         },
         
@@ -322,6 +379,21 @@ var controller = (function (budgetCntrl, UICntrl) {
         UICntrl.displayBudget(budget);
         
     };
+    
+    
+    var updateExpPercentages = function() {
+        
+        // 1. Calculate percentages
+        budgetCntrl.calculatePercentages();
+        
+        // 2. Read percentages from budget controller
+        var percentages = budgetCntrl.getPercentages();
+        
+        // 3. Update the UI
+        console.log(percentages);
+        
+        
+    };
 
 
     // private function that gets called when we want to add a new item
@@ -351,6 +423,9 @@ var controller = (function (budgetCntrl, UICntrl) {
 
             // 5. Calculate and update the budget
             updateBudget();
+            
+            // 6. Calculate and update expense percentages
+            updateExpPercentages();
 
 
         }
@@ -385,6 +460,9 @@ var controller = (function (budgetCntrl, UICntrl) {
         
         // 3. Update and show the new budget
         updateBudget();
+        
+        // 4. Calculate and update expense percentages
+        updateExpPercentages();
         
         
     };
