@@ -82,6 +82,40 @@ var budgetController = (function () {
 
         },
         
+        // delete item public method
+        deleteItem: function(type, id) {
+            // declare the variables
+            var ids, index;
+            
+            
+            // id = 6
+            // ids = [1, 2, 4, 6, 8] :: index would be 3
+            // create an array with all ids and then find the index of the element with the id to be removed
+            
+            
+            // loop over all elements in either 'inc' or 'exp' array
+            // .map has access to current Element, current Index, and entire array in the callback 
+            // .map will RETURN a brand new array
+            // create a new array
+            ids = data.allItems[type].map(function(currentElement){
+                
+                return currentElement.id;
+                
+            });
+            
+            // find the index of the element to delete from the new array ids
+            // returns index of the id passed through
+            index = ids.indexOf(id);
+            
+            // now delete that item from the array
+            // if not found, it will return -1
+            
+            if (index !== -1) {
+                data.allItems[type].splice(index, 1);
+            }
+
+        },
+        
         calculateBudget: function() {
             
             // calculate total income and expenses
@@ -324,18 +358,18 @@ var controller = (function (budgetCntrl, UICntrl) {
         itemID = event.target.parentNode.parentNode.parentNode.parentNode.id; // target = i.ion-ios-close-outline
         
         
-        if (itemId) {
+        if (itemID) {
             
             // inc-# or exp-#
             // use split - JS converts string to an Object and will return and array
             splitID = itemID.split('-');
             
             type = splitID[0];            
-            ID = splitID[1];
+            ID = parseInt(splitID[1]); // use parseInt to convert the string '1' to number 1
         }
         
         // 1. delete item from data structure
-        
+        budgetCntrl.deleteItem(type, ID);
         
         
         // 2. delete item from UI
