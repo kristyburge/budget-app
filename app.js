@@ -138,7 +138,11 @@ var UIController = (function () {
         inputValue: '.add__value',
         inputButton: '.add__btn',
         incomeContainer: '.income__list',
-        expenseContainer: '.expenses__list'
+        expenseContainer: '.expenses__list',
+        budgetLabel: '.budget__value',
+        incomeLabel: '.budget__income--value',
+        expensesLabel: '.budget__expenses--value',
+        percentageLabel: '.budget__expenses--percentage'
     }
 
     // return an object that contains a method to get input values
@@ -203,6 +207,27 @@ var UIController = (function () {
             fieldsArray[0].focus();
             
         },
+        
+        displayBudget: function(obj) {
+            
+            document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+            
+            document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+            
+            document.querySelector(DOMstrings.expensesLabel).textContent = obj.totalExp;
+            
+            
+            
+            // if there's a percentage, display it, if it's -1, then display something else
+            
+            if (obj.percentage > 0) {
+                document.querySelector(DOMstrings.percentageLabel).textContent = obj.percentage + '%';
+                
+            } else {
+                document.querySelector(DOMstrings.percentageLabel).textContent = '---';
+            }
+            
+        },
 
         // pass DOMstrings object to the global app controller
         getDOMstrings: function () {
@@ -243,7 +268,9 @@ var controller = (function (budgetCntrl, UICntrl) {
         var budget = budgetCntrl.getBudget();
         
         // 3. Display the budget on the UI
-        console.log(budget);
+        // console.log(budget);
+        // pass the budget object as a parameter to the displayBudget method b/c it's looking for an obj argument
+        UICntrl.displayBudget(budget);
         
     };
 
@@ -287,6 +314,14 @@ var controller = (function (budgetCntrl, UICntrl) {
     return {
         init: function () {
             //console.log('Application has begun.');
+            
+            // set initial budget to zero upon application start
+            UICntrl.displayBudget({
+                budget: 0,
+                totalInc: 0,
+                totalExp: 0,
+                percentage: -1
+            });
             setUpEventListeners();
         }
     }
