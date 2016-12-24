@@ -142,7 +142,8 @@ var UIController = (function () {
         budgetLabel: '.budget__value',
         incomeLabel: '.budget__income--value',
         expensesLabel: '.budget__expenses--value',
-        percentageLabel: '.budget__expenses--percentage'
+        percentageLabel: '.budget__expenses--percentage',
+        container: '.container'
     }
 
     // return an object that contains a method to get input values
@@ -166,12 +167,12 @@ var UIController = (function () {
             if (type === 'inc') {
                 
                 element = DOMstrings.incomeContainer;
-                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="inc-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
                 
             } else if (type === 'exp') {
                 
                 element = DOMstrings.expenseContainer;
-                html = '<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
+                html = '<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>'
                 
             }
             
@@ -246,6 +247,7 @@ var controller = (function (budgetCntrl, UICntrl) {
     var setUpEventListeners = function () {
 
         var DOM = UICntrl.getDOMstrings();
+        
         document.querySelector(DOM.inputButton).addEventListener('click', controlAddItem);
 
         document.addEventListener('keypress', function (event) {
@@ -256,6 +258,11 @@ var controller = (function (budgetCntrl, UICntrl) {
             }
 
         });
+        
+        
+        // use event delegation to the parent .container
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        
     };
 
     
@@ -306,6 +313,38 @@ var controller = (function (budgetCntrl, UICntrl) {
 
         }
 
+    };
+    
+    
+    var ctrlDeleteItem = function(event){
+        
+        var itemID, splitID, type, ID;
+        
+        // use parentNode to traverse up the DOM and then get the unique #id#
+        itemID = event.target.parentNode.parentNode.parentNode.parentNode.id; // target = i.ion-ios-close-outline
+        
+        
+        if (itemId) {
+            
+            // inc-# or exp-#
+            // use split - JS converts string to an Object and will return and array
+            splitID = itemID.split('-');
+            
+            type = splitID[0];            
+            ID = splitID[1];
+        }
+        
+        // 1. delete item from data structure
+        
+        
+        
+        // 2. delete item from UI
+        
+        
+        
+        // 3. Update and show the new budget
+        
+        
     };
 
     // create a public initialization function
