@@ -234,7 +234,8 @@ var UIController = (function () {
         incomeLabel: '.budget__income--value',
         expensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
-        container: '.container'
+        container: '.container',
+        expPercentageLabel: '.item__percentage'
     }
 
     // return an object that contains a method to get input values
@@ -328,6 +329,47 @@ var UIController = (function () {
             }
             
         },
+        
+        
+        displayPercentages: function(percentagesArr) {
+            
+            var fields = document.querySelectorAll(DOMstrings.expPercentageLabel); // this returns a node list
+            
+            // loop through
+            // create your own foreach function for node lists so it's reusable for any nodelist
+            
+            var nodeListForEach = function(list, callbackFn) {
+                
+                for (var i = 0; i < list.length; i++) {
+                    
+                    // current is the item in the array
+                    // i is the index
+                    // in each iteration, the callback function gets called 
+                    callbackFn(list[i], i);    
+                    
+                }
+                
+                
+            };
+            
+            
+            nodeListForEach(fields, function(current, index){ 
+                
+                if (percentagesArr[index] > 0) {
+
+                    // display percentages
+                    current.textContent = percentagesArr[index] + '%';
+                    
+                } else {
+                    
+                    current.textContent = '---';
+                    
+                }
+            
+            });
+            
+            
+        },
 
         // pass DOMstrings object to the global app controller
         getDOMstrings: function () {
@@ -390,7 +432,9 @@ var controller = (function (budgetCntrl, UICntrl) {
         var percentages = budgetCntrl.getPercentages();
         
         // 3. Update the UI
-        console.log(percentages);
+        // console.log(percentages); // this is an array
+        UICntrl.displayPercentages(percentages);
+        
         
         
     };
