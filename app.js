@@ -235,7 +235,8 @@ var UIController = (function () {
         expensesLabel: '.budget__expenses--value',
         percentageLabel: '.budget__expenses--percentage',
         container: '.container',
-        expPercentageLabel: '.item__percentage'
+        expPercentageLabel: '.item__percentage',
+        dateLabel: '.budget__title--month'
     }; 
       
     // private function
@@ -401,6 +402,33 @@ var UIController = (function () {
             
         },
         
+        
+        displayMonth: function() {
+            var now, year, month, months;
+            
+            
+            now = new Date();
+            // note: month is zero based, so use 11 to get December; 12 will return Jan 25, 2017
+            // var Christmas = new Date(2016, 11, 25); 
+            months = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ];
+            month = now.getMonth();
+            year = now.getFullYear();
+            document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
+        },
+        
 
         // pass DOMstrings object to the global app controller
         getDOMstrings: function () {
@@ -548,7 +576,7 @@ var controller = (function (budgetCntrl, UICntrl) {
     return {
         init: function () {
             //console.log('Application has begun.');
-            
+            UICntrl.displayMonth();
             // set initial budget to zero upon application start
             UICntrl.displayBudget({
                 budget: 0,
