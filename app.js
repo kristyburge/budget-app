@@ -72,6 +72,7 @@ var budgetController = (function () {
         budget: 0,
         percentage: -1 // because evaluated as non-existent
     };
+            
 
     // create public method to allow other modules to add new items to the data structure
     return {
@@ -263,6 +264,22 @@ var UIController = (function () {
         return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec; 
 
     };
+    
+    
+    // private function within UI controller
+    var nodeListForEach = function(list, callbackFn) {
+                
+                for (var i = 0; i < list.length; i++) {
+                    
+                    // current is the item in the array
+                    // i is the index
+                    // in each iteration, the callback function gets called 
+                    callbackFn(list[i], i);    
+                    
+                }
+                
+                
+    };
 
     // return an object that contains a method to get input values
     return {
@@ -369,20 +386,6 @@ var UIController = (function () {
             // loop through
             // create your own foreach function for node lists so it's reusable for any nodelist
             
-            var nodeListForEach = function(list, callbackFn) {
-                
-                for (var i = 0; i < list.length; i++) {
-                    
-                    // current is the item in the array
-                    // i is the index
-                    // in each iteration, the callback function gets called 
-                    callbackFn(list[i], i);    
-                    
-                }
-                
-                
-            };
-            
             
             nodeListForEach(fields, function(current, index){ 
                 
@@ -429,6 +432,22 @@ var UIController = (function () {
             document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year;
         },
         
+        changedType: function() {
+          
+            var fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' + 
+                DOMstrings.inputDescription + ',' + 
+                DOMstrings.inputValue);
+            //console.log(fields);
+            
+            nodeListForEach(fields, function(current){
+                current.classList.toggle('red-focus');
+            });
+            
+            document.querySelector(DOMstrings.inputButton).classList.toggle('red');
+            
+        },
+        
 
         // pass DOMstrings object to the global app controller
         getDOMstrings: function () {
@@ -462,6 +481,10 @@ var controller = (function (budgetCntrl, UICntrl) {
         
         // use event delegation to the parent .container
         document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+        
+        // use change event to update highlight color of input fields for expense entries
+        document.querySelector(DOM.inputType).addEventListener('change', UICntrl.changedType);
+        
         
     };
 
